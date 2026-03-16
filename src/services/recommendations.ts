@@ -21,6 +21,8 @@ export const getRecommendedOpportunities = async (userId: string) => {
   }
 };
 
+export const getRecommendations = getRecommendedOpportunities;
+
 export const getCompatibilityDetails = async (userId: string, opportunityId: string) => {
   return {
     score: 85,

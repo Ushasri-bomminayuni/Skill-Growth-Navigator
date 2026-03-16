@@ -1,5 +1,16 @@
 "use client";
 
+export type UserProfile = {
+  id: string;
+  college?: string;
+  year?: string;
+  skills?: string[];
+  interests?: string[];
+  location?: string;
+  isAdmin?: boolean;
+  [key: string]: any;
+};
+
 import { 
   collection, 
   doc, 
@@ -37,11 +48,11 @@ export const updateUserProfile = async (userId: string, data: any) => {
   }, { merge: true });
 };
 
-export const getUserProfile = async (userId: string) => {
+export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
   if (userSnap.exists()) {
-    return { id: userSnap.id, ...userSnap.data() };
+    return { id: userSnap.id, ...userSnap.data() } as UserProfile;
   }
   return null;
 };
