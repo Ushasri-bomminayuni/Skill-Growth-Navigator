@@ -148,11 +148,11 @@ export async function getCompatibilityExplanation(userProfile: any, opportunity:
   } catch (error) {
     console.error("Error generating compatibility explanation:", error);
     // Fallback to simple explanation
-    const matchingSkills = userProfile.skills?.filter(skill =>
+    const matchingSkills = userProfile.skills?.filter((skill: string) =>
       opportunity.skills_required?.includes(skill)
     ) || [];
 
-    const missingSkills = opportunity.skills_required?.filter(skill =>
+    const missingSkills = opportunity.skills_required?.filter((skill: string) =>
       !userProfile.skills?.includes(skill)
     ) || [];
 
@@ -171,7 +171,7 @@ export async function getCompatibilityExplanation(userProfile: any, opportunity:
 function calculateCompatibilityScore(userSkills: string[], opportunitySkills: string[]): number {
   if (opportunitySkills.length === 0) return 0;
 
-  const matchingSkills = userSkills.filter(skill =>
+  const matchingSkills = userSkills.filter((skill: string) =>
     opportunitySkills.includes(skill)
   );
 
