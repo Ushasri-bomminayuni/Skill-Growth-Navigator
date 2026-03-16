@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getRecommendedOpportunities } from "@/services/recommendations";
+import { getRecommendedOpportunities, getCompatibilityDetails } from "@/services/recommendations";
 import { getUserProfile } from "@/services/database";
 import { getOpportunities } from "@/services/database";
 
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
     const recommendations = await getRecommendedOpportunities(userId);
     return NextResponse.json({ success: true, recommendations });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error getting recommendations:", error);
     return NextResponse.json(
       { success: false, error: error.message },
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     const result = await getCompatibilityDetails(userId, opportunityId);
     return NextResponse.json({ success: true, result });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error getting compatibility details:", error);
     return NextResponse.json(
       { success: false, error: error.message },

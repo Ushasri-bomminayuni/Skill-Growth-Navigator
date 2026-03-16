@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getOpportunities, updateOpportunity } from "@/services/database";
-import { Loader2, Search, Plus, Edit, Trash2, Check, X } from "lucide-react";
+import { Loader2, Search, Plus, Edit, Trash2, Check, X, Briefcase } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 

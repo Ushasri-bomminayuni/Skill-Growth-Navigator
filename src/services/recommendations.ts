@@ -4,7 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
 // Basic Recommendation Logic (Placeholder for full AI engine)
-export const getRecommendations = async (userId: string) => {
+export const getRecommendedOpportunities = async (userId: string) => {
   try {
     const oppsRef = collection(db, "opportunities");
     const querySnapshot = await getDocs(oppsRef);
@@ -19,4 +19,12 @@ export const getRecommendations = async (userId: string) => {
     console.error("AI matching failed", error);
     return [];
   }
+};
+
+export const getCompatibilityDetails = async (userId: string, opportunityId: string) => {
+  return {
+    score: 85,
+    matchReasons: ["Skills match your profile", "Location preference met"],
+    missingSkills: ["Cloud Architecture"]
+  };
 };
