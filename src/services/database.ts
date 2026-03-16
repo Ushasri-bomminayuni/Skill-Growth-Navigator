@@ -11,6 +11,33 @@ export type UserProfile = {
   [key: string]: any;
 };
 
+export type Bookmark = {
+  id: string;
+  userId: string;
+  opportunityId: string;
+  createdAt: any;
+};
+
+export type Application = {
+  id: string;
+  userId: string;
+  opportunityId: string;
+  status: string;
+  createdAt: any;
+  updatedAt: any;
+  [key: string]: any;
+};
+
+export type Notification = {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  read: boolean;
+  createdAt: any;
+  [key: string]: any;
+};
+
 import { 
   collection, 
   doc, 
@@ -159,11 +186,11 @@ export const removeBookmark = async (userId: string, opportunityId: string) => {
   await Promise.all(deletePromises);
 };
 
-export const getUserBookmarks = async (userId: string) => {
+export const getUserBookmarks = async (userId: string): Promise<Bookmark[]> => {
   const bookmarksRef = collection(db, "bookmarks");
   const q = query(bookmarksRef, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Bookmark));
 };
 
 export const isBookmarked = async (userId: string, opportunityId: string) => {
@@ -193,19 +220,19 @@ export const updateApplicationStatus = async (applicationId: string, status: str
   });
 };
 
-export const getUserApplications = async (userId: string) => {
+export const getUserApplications = async (userId: string): Promise<Application[]> => {
   const appsRef = collection(db, "applications");
   const q = query(appsRef, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Application));
 };
 
 // NOTIFICATIONS
-export const getUserNotifications = async (userId: string) => {
+export const getUserNotifications = async (userId: string): Promise<Notification[]> => {
   const notifsRef = collection(db, "notifications");
   const q = query(notifsRef, where("userId", "==", userId), orderBy("createdAt", "desc"));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Notification));
 };
 
 export const createNotification = async (userId: string, data: any) => {
