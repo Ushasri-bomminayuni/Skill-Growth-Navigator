@@ -3,30 +3,36 @@ import { getMessaging } from "firebase-admin/messaging";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 
 // Initialize Firebase Admin
-if (!getApps().length) {
-  const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
-    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
-    : {
-        projectId: process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      };
+function getAdminApp() {
+  if (!getApps().length) {
+    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON
+      ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)
+      : {
+          projectId: process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        };
 
-  if (serviceAccount.projectId && (serviceAccount.clientEmail || process.env.FIREBASE_SERVICE_ACCOUNT_JSON)) {
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-    console.log("Firebase Admin initialized successfully");
-  } else {
+    if (serviceAccount.projectId && (serviceAccount.clientEmail || process.env.FIREBASE_SERVICE_ACCOUNT_JSON)) {
+      return initializeApp({
+        credential: cert(serviceAccount),
+      });
+    }
     console.warn("Firebase Admin credentials missing. Notifications will not work.");
+    return null;
   }
+  return getApps()[0];
 }
-
-const messaging = getMessaging();
 
 export async function POST(request: Request) {
   try {
+    const app = getAdminApp();
+    if (!app) {
+      throw new Error("Firebase Admin not initialized - missing credentials");
+    }
+
     const { token, payload } = await request.json();
+    const messaging = getMessaging(app);
 
     const message = {
       token,

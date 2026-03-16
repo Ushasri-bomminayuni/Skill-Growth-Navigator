@@ -126,7 +126,7 @@ export default function LoginPage() {
         transition={{ duration: 0.5, delay: 0.4 }}
         className="text-center text-sm text-muted-foreground"
       >
-        Don't have an account? {" "}
+        Don&apos;t have an account? {" "}
         <Button
           variant="link"
           className="p-0 h-auto"

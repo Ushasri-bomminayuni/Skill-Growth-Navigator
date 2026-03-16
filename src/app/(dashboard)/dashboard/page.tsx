@@ -212,7 +212,7 @@ export default function DashboardPage() {
         ) : (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              You haven't saved any opportunities yet
+              You haven&apos;t saved any opportunities yet
             </CardContent>
           </Card>
         )}
@@ -274,7 +274,7 @@ export default function DashboardPage() {
         ) : (
           <Card>
             <CardContent className="py-8 text-center text-muted-foreground">
-              You haven't applied to any opportunities yet
+              You haven&apos;t applied to any opportunities yet
             </CardContent>
           </Card>
         )}

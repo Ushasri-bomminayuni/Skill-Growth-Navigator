@@ -26,7 +26,8 @@ export const getRecommendations = getRecommendedOpportunities;
 export const getCompatibilityDetails = async (userId: string, opportunityId: string) => {
   return {
     score: 85,
-    matchReasons: ["Skills match your profile", "Location preference met"],
+    explanation: "This opportunity is a great match for your current skill set and career goals.",
+    matchingSkills: ["JavaScript", "React"],
     missingSkills: ["Cloud Architecture"]
   };
 };

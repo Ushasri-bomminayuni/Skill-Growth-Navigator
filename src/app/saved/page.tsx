@@ -95,7 +95,7 @@ export default function SavedOpportunitiesPage() {
           <BookmarkIcon className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
           <h3 className="text-xl font-semibold mb-2">No saved opportunities</h3>
           <p className="text-muted-foreground max-w-md mx-auto mb-6">
-            You haven't saved any opportunities yet. Browse the discovery page to find and bookmark opportunities that match your interests.
+            You haven&apos;t saved any opportunities yet. Browse the discovery page to find and bookmark opportunities that match your interests.
           </p>
           <Button onClick={() => router.push("/opportunities")}>
             Discover Opportunities

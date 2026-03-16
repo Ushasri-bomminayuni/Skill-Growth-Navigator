@@ -227,7 +227,7 @@ export default function OpportunityDetailPage() {
                         </div>
                         <div>
                           <p className="text-sm font-medium">Days remaining</p>
-                          <p className="text-xs text-muted-foreground">Don't miss the deadline!</p>
+                          <p className="text-xs text-muted-foreground">Don&apos;t miss the deadline!</p>
                         </div>
                       </div>
                       <Button 

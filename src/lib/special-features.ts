@@ -2,6 +2,13 @@
 
 import { calculateCompatibilityScore } from "./utils";
 import { getCompatibilityDetails } from "@/services/recommendations";
+import { UserProfile } from "@/services/database";
+
+const ensureDate = (date: any): Date => {
+  if (!date) return new Date();
+  if (typeof date.toDate === 'function') return date.toDate();
+  return new Date(date);
+};
 
 // Calculate AI compatibility score with explanation
 export const getAICompatibilityScore = async (userId: string, opportunity: any) => {
@@ -57,8 +64,10 @@ export const getTrendingOpportunities = async (opportunities: any[], limit = 6) 
       return b.views - a.views;
     }
     // Then by upcoming deadlines (ascending)
-    const aDaysLeft = Math.ceil((a.deadline.toDate().getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-    const bDaysLeft = Math.ceil((b.deadline.toDate().getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    const aDeadline = ensureDate(a.deadline);
+    const bDeadline = ensureDate(b.deadline);
+    const aDaysLeft = Math.ceil((aDeadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    const bDaysLeft = Math.ceil((bDeadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
     return aDaysLeft - bDaysLeft;
   });
@@ -103,7 +112,7 @@ export const filterByEligibility = (opportunities: any[], userProfile: any) => {
 };
 
 // Get personalized dashboard widgets
-export const getPersonalizedDashboard = async (userId: string, opportunities: any[]) => {
+export const getPersonalizedDashboard = async (userId: string, opportunities: any[], userProfile?: UserProfile) => {
   // This would be enhanced with AI to create truly personalized widgets
   const now = new Date();
 
@@ -123,18 +132,18 @@ export const getPersonalizedDashboard = async (userId: string, opportunities: an
 
   // Upcoming deadlines
   const upcomingDeadlines = opportunities
-    .filter(op => op.deadline.toDate() > now)
-    .sort((a, b) => a.deadline.toDate().getTime() - b.deadline.toDate().getTime())
+    .filter(op => ensureDate(op.deadline) > now)
+    .sort((a, b) => ensureDate(a.deadline).getTime() - ensureDate(b.deadline).getTime())
     .slice(0, 6);
 
   // New opportunities
   const newOpportunities = opportunities
-    .sort((a, b) => b.createdAt.toDate().getTime() - a.createdAt.toDate().getTime())
+    .sort((a, b) => ensureDate(b.createdAt).getTime() - ensureDate(a.createdAt).getTime())
     .slice(0, 6);
 
   // Opportunities in user's location
   const locationOpportunities = opportunities
-    .filter(op => op.location === "Remote" || (userProfile.location && op.location.includes(userProfile.location)))
+    .filter(op => op.location === "Remote" || (userProfile?.location && op.location.includes(userProfile.location)))
     .slice(0, 6);
 
   return {
