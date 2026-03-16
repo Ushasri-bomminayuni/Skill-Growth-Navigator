@@ -7,15 +7,21 @@ Runs scraping scripts on a schedule and manages the scraping pipeline
 import os
 import time
 import schedule
+import sys
 import subprocess
 from datetime import datetime
 
 def run_scraper(script_name):
     """Run a scraping script"""
     print(f"[{datetime.now()}] Starting {script_name}...")
+    
+    # Get the directory of the current script
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    script_path = os.path.join(current_dir, script_name)
+    
     try:
         result = subprocess.run(
-            ["python", script_name],
+            [sys.executable, script_path],
             check=True,
             capture_output=True,
             text=True

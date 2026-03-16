@@ -14,9 +14,44 @@ from playwright.sync_api import sync_playwright
 from firebase_admin import initialize_app, credentials, firestore
 
 # Initialize Firebase
-cred = credentials.Certificate("path/to/firebase-service-account.json")
-firebase_app = initialize_app(cred)
-db = firestore.client()
+def initialize_firebase():
+    """Initialize Firebase Admin SDK"""
+    service_account_info = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+    
+    if service_account_info:
+        try:
+            # Parse the JSON string
+            import json
+            cert_dict = json.loads(service_account_info)
+            cred = credentials.Certificate(cert_dict)
+            print("Initialized Firebase using environment variable")
+        except Exception as e:
+            print(f"Error parsing FIREBASE_SERVICE_ACCOUNT_JSON: {e}")
+            # Fallback
+            cred = credentials.Certificate("path/to/firebase-service-account.json")
+    else:
+        # Fallback to local file for development
+        cert_path = "path/to/firebase-service-account.json"
+        if os.path.exists(cert_path):
+            cred = credentials.Certificate(cert_path)
+            print(f"Initialized Firebase using local file: {cert_path}")
+        else:
+            print("Warning: Firebase service account not found. Firestore operations will fail.")
+            return None
+
+    try:
+        return initialize_app(cred)
+    except Exception as e:
+        # App might already be initialized
+        from firebase_admin import get_app
+        try:
+            return get_app()
+        except:
+             print(f"Failed to initialize Firebase: {e}")
+             return None
+
+firebase_app = initialize_firebase()
+db = firestore.client() if firebase_app else None
 
 def scrape_linkedin_internships(search_query="internship", location="United States", pages=5):
     """Scrape internship opportunities from LinkedIn"""
